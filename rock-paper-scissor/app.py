@@ -1,19 +1,52 @@
-from flask import Flask, render_template, request, jsonify
-from game_logic import get_computer_choice, get_result
+import java.util.Scanner;
+import java.util.Random;
 
-app = Flask(__name__)
+public class RockPaperScissors {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Random random = new Random();
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+        String[] choices = {"Rock", "Paper", "Scissors"};
+        System.out.println("Welcome to Rock, Paper, Scissors Game!");
+        
+        while (true) {
+            System.out.print("Enter your choice (Rock, Paper, Scissors or Exit): ");
+            String userChoice = sc.nextLine().trim();
 
-@app.route('/play', methods=['POST'])
-def play():
-    data = request.get_json()
-    player = data['player']
-    computer = get_computer_choice()
-    result = get_result(player, computer)
-    return jsonify({"player": player, "computer": computer, "result": result})
+            if (userChoice.equalsIgnoreCase("Exit")) {
+                System.out.println("Thanks for playing!");
+                break;
+            }
 
-if __name__ == '__main__':
-    app.run(debug=True)
+            // Validate user input
+            if (!userChoice.equalsIgnoreCase("Rock") &&
+                !userChoice.equalsIgnoreCase("Paper") &&
+                !userChoice.equalsIgnoreCase("Scissors")) {
+                System.out.println("Invalid input! Try again.");
+                continue;
+            }
+
+            // Computer's turn
+            int computerIndex = random.nextInt(3);
+            String computerChoice = choices[computerIndex];
+            System.out.println("Computer chose: " + computerChoice);
+
+            // Determine the winner
+            if (userChoice.equalsIgnoreCase(computerChoice)) {
+                System.out.println("It's a Tie!");
+            } else if (
+                (userChoice.equalsIgnoreCase("Rock") && computerChoice.equals("Scissors")) ||
+                (userChoice.equalsIgnoreCase("Paper") && computerChoice.equals("Rock")) ||
+                (userChoice.equalsIgnoreCase("Scissors") && computerChoice.equals("Paper"))
+            ) {
+                System.out.println("You Win!");
+            } else {
+                System.out.println("You Lose!");
+            }
+
+            System.out.println();
+        }
+
+        sc.close();
+    }
+}
